@@ -14,7 +14,7 @@ self.addEventListener('push', (event) => {
   const payload = event.data?.json() || {};
   
   // Extract notification details from server payload
-  const title = payload.title || 'SwiftTalk';
+  const title = payload.title || 'Quorent';
   const body = payload.body || 'New message';
   const icon = payload.icon || '/logo192.png';
   const badge = payload.badge || '/badge-72x72.svg';

@@ -28,16 +28,16 @@ const allowedOrigins = [
   "https://localhost:3002",
   "https://127.0.0.1:3002",
   "https://rushik8626.github.io",
-  "https://swiftalk.vercel.app",
+  "https://quorent.vercel.app",
   "https://switftalk.vercel.app",
-  "https://swifttalk-kv2qalfll-rushikeshs-projects-0260b878.vercel.app",
-  "https://swifttalk-api.me"
+  "https://quorent-kv2qalfll-rushikeshs-projects-0260b878.vercel.app",
+  "https://quorent-api.me"
 ];
 
 const checkCorsOrigin = function (origin, callback) {
   if (!origin || allowedOrigins.includes(origin) ||
     (/^https?:\/\/(localhost|127\.0\.0\.1)(:\d+)?$/.test(origin)) ||
-    (origin && (origin.includes('.trycloudflare.com') || origin.includes('.github.io') || origin.includes('swifttalk-api.me') || origin.includes('vercel.app')))) {
+    (origin && (origin.includes('.trycloudflare.com') || origin.includes('.github.io') || origin.includes('quorent-api.me') || origin.includes('vercel.app')))) {
     callback(null, true);
   } else {
     callback(new Error('Not allowed by CORS'));
@@ -63,7 +63,7 @@ const io = new Server(server, {
 
 app.get('/', (req, res) => {
   res.json({
-    service: 'SwiftTalk WebSocket Server',
+    service: 'Quorent WebSocket Server',
     version: '1.2.0',
     status: 'running',
     connections: io.engine ? io.engine.clientsCount : 0,
@@ -135,7 +135,7 @@ async function startWsServer() {
   }
 
   server.listen(WS_PORT, () => {
-    console.log(`SwiftTalk WebSocket server running on port ${WS_PORT}`);
+    console.log(`Quorent WebSocket server running on port ${WS_PORT}`);
   });
 }
 

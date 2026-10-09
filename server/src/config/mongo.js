@@ -5,7 +5,7 @@ let isConnected = false;
 const connectMongo = async () => {
   if (isConnected) return mongoose.connection;
 
-  const mongoUri = process.env.MONGODB_URI || 'mongodb://localhost:27017/swifttalk';
+  const mongoUri = process.env.MONGODB_URI || 'mongodb://localhost:27017/quorent';
 
   try {
     const conn = await mongoose.connect(mongoUri, {

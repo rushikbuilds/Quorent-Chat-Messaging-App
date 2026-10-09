@@ -100,16 +100,16 @@ const Register = () => {
   return (
     <>
       <Helmet>
-        <title>Create Account | SwiftTalk</title>
-        <meta name="description" content="Register to SwiftTalk to chat and connect." />
-        <meta property="og:title" content="Register | SwiftTalk" />
-        <meta property="og:description" content="Sign in to your SwiftTalk account to chat and connect." />
+        <title>Create Account | Quorent</title>
+        <meta name="description" content="Register to Quorent to chat and connect." />
+        <meta property="og:title" content="Register | Quorent" />
+        <meta property="og:description" content="Sign in to your Quorent account to chat and connect." />
       </Helmet>
       <div className="register-container">
         <div className="register-card fade-in">
           <div className="register-header">
             <h1>Create Account</h1>
-            <p>Join SwiftTalk and start connecting</p>
+            <p>Join Quorent and start connecting</p>
           </div>
 
           <form onSubmit={handleSubmit} className="register-form">

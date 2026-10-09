@@ -103,17 +103,17 @@ const Login = () => {
   return (
     <>
       <Helmet>
-        <title>Login | SwiftTalk</title>
-        <meta name="description" content="Sign in to your SwiftTalk account to chat and connect." />
-        <meta property="og:title" content="Login | SwiftTalk" />
-        <meta property="og:description" content="Sign in to your SwiftTalk account to chat and connect." />
+        <title>Login | Quorent</title>
+        <meta name="description" content="Sign in to your Quorent account to chat and connect." />
+        <meta property="og:title" content="Login | Quorent" />
+        <meta property="og:description" content="Sign in to your Quorent account to chat and connect." />
       </Helmet>
 
       <div className="login-container">
         <ToastContainer toasts={toasts} removeToast={removeToast} />
         <div className="login-card fade-in">
           <div className="login-header">
-            <h1>Welcome to SwiftTalk</h1>
+            <h1>Welcome to Quorent</h1>
             <p>Sign in to continue your conversations</p>
           </div>
 

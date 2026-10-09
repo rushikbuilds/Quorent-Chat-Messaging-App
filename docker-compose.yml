@@ -3,7 +3,7 @@ services:
     image: mysql:8.0
     environment:
       MYSQL_ROOT_PASSWORD: secret
-      MYSQL_DATABASE: swifttalk
+      MYSQL_DATABASE: quorent
     volumes:
       - mysql-data:/var/lib/mysql
     healthcheck:
@@ -50,9 +50,9 @@ services:
     env_file:
       - ./server/.env
     environment:
-      DATABASE_URL: mysql://root:secret@mysql:3306/swifttalk
+      DATABASE_URL: mysql://root:secret@mysql:3306/quorent
       REDIS_URL: redis://redis:6379
-      MONGODB_URI: mongodb://mongo:27017/swifttalk
+      MONGODB_URI: mongodb://mongo:27017/quorent
       PORT: 3001
     healthcheck:
       test: ["CMD", "wget", "--quiet", "--tries=1", "--spider", "http://localhost:3001/health"]
@@ -77,9 +77,9 @@ services:
     env_file:
       - ./server/.env
     environment:
-      DATABASE_URL: mysql://root:secret@mysql:3306/swifttalk
+      DATABASE_URL: mysql://root:secret@mysql:3306/quorent
       REDIS_URL: redis://redis:6379
-      MONGODB_URI: mongodb://mongo:27017/swifttalk
+      MONGODB_URI: mongodb://mongo:27017/quorent
       WS_PORT: 3002
     healthcheck:
       test: ["CMD", "wget", "--quiet", "--tries=1", "--spider", "http://localhost:3002/health"]

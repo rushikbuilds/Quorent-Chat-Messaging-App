@@ -3,7 +3,7 @@
  * Uses localStorage to persist the width across navigation
  */
 
-const SIDEBAR_WIDTH_KEY = "swifttalk_sidebar_width";
+const SIDEBAR_WIDTH_KEY = "quorent_sidebar_width";
 const DEFAULT_WIDTH = 360;
 const MIN_WIDTH = 320;
 const MAX_WIDTH = 650;

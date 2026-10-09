@@ -143,7 +143,7 @@ exports.verifyRegistrationOTP = async (req, res) => {
           username: userData.username,
           email: userData.email,
           full_name: userData.full_name,
-          status_message: 'Hey there! I am using SwiftTalk',
+          status_message: 'Hey there! I am using Quorent',
           verified: true,
           auth: { create: { password_hash: userData.password } },
         },

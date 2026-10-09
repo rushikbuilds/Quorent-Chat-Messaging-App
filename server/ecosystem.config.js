@@ -1,7 +1,7 @@
 // PM2 Configuration for Production
 module.exports = {
   apps: [{
-    name: 'swifttalk-server',
+    name: 'quorent-server',
     script: './src/server.js',
     instances: 1, 
     exec_mode: 'fork', 

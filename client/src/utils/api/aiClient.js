@@ -1,5 +1,5 @@
 /**
- * AI Client for SwiftTalk
+ * AI Client for Quorent
  * Handles all AI-related API calls: smart replies, translation, summarization, etc.
  */
 

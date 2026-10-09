@@ -28,16 +28,16 @@ const allowedOrigins = [
   "https://localhost:3002",
   "https://127.0.0.1:3002",
   "https://rushik8626.github.io",
-  "https://swiftalk.vercel.app",
+  "https://quorent.vercel.app",
   "https://switftalk.vercel.app",
-  "https://swifttalk-kv2qalfll-rushikeshs-projects-0260b878.vercel.app",
-  "https://swifttalk-api.me"
+  "https://quorent-kv2qalfll-rushikeshs-projects-0260b878.vercel.app",
+  "https://quorent-api.me"
 ];
 
 const checkCorsOrigin = function (origin, callback) {
   if (!origin || allowedOrigins.includes(origin) ||
     (/^https?:\/\/(localhost|127\.0\.0\.1)(:\d+)?$/.test(origin)) ||
-    (origin && (origin.includes('.trycloudflare.com') || origin.includes('.github.io') || origin.includes('swifttalk-api.me') || origin.includes('vercel.app')))) {
+    (origin && (origin.includes('.trycloudflare.com') || origin.includes('.github.io') || origin.includes('quorent-api.me') || origin.includes('vercel.app')))) {
     callback(null, true);
   } else {
     callback(new Error('Not allowed by CORS'));
@@ -68,7 +68,7 @@ app.use(express.urlencoded({ extended: true, limit: '50mb' }));
 
 app.get('/', (req, res) => {
   res.json({
-    message: 'SwiftTalk Chat Server is running!',
+    message: 'Quorent Chat Server is running!',
     version: '1.1.0',
     endpoints: {
       auth: '/api/auth',
@@ -179,7 +179,7 @@ async function startServer() {
   }
 
   server.listen(PORT, () => {
-    console.log(`SwiftTalk server running on port ${PORT}`);
+    console.log(`Quorent server running on port ${PORT}`);
   });
 }
 

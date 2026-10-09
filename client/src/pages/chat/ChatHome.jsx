@@ -1107,10 +1107,10 @@ const ChatHome = () => {
   return (
     <>
       <Helmet>
-        <title>Chats | SwiftTalk</title>
-        <meta name="description" content="View and manage your conversations on SwiftTalk." />
-        <meta property="og:title" content="Chats | SwiftTalk" />
-        <meta property="og:description" content="View and manage your conversations on SwiftTalk." />
+        <title>Chats | Quorent</title>
+        <meta name="description" content="View and manage your conversations on Quorent." />
+        <meta property="og:title" content="Chats | Quorent" />
+        <meta property="og:description" content="View and manage your conversations on Quorent." />
       </Helmet>
       <div className="chat-home" onClick={clearAllSelection}>
         <div

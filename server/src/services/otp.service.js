@@ -15,7 +15,7 @@ const sendEmailWithResend = async (to, subject, html) => {
       'Content-Type': 'application/json',
     },
     body: JSON.stringify({
-      from: process.env.EMAIL_FROM || 'SwiftTalk <onboarding@resend.dev>',
+      from: process.env.EMAIL_FROM || 'Quorent <onboarding@resend.dev>',
       to: [to],
       subject: subject,
       html: html,
@@ -80,17 +80,17 @@ exports.sendOTPEmail = async (email, otpCode, otpType) => {
     let subject, message;
 
     if (otpType === 'register') {
-      subject = 'Welcome to SwiftTalk - Verify Your Account';
-      message = `Welcome to SwiftTalk! Your verification code is:`;
+      subject = 'Welcome to Quorent - Verify Your Account';
+      message = `Welcome to Quorent! Your verification code is:`;
     } else if (otpType === 'login') {
-      subject = 'SwiftTalk Login Verification';
-      message = `Your SwiftTalk login verification code is:`;
+      subject = 'Quorent Login Verification';
+      message = `Your Quorent login verification code is:`;
     } else if (otpType === 'reset') {
-      subject = 'SwiftTalk Password Reset';
-      message = `Your SwiftTalk password reset OTP is:`;
+      subject = 'Quorent Password Reset';
+      message = `Your Quorent password reset OTP is:`;
     } else {
-      subject = 'SwiftTalk Verification Code';
-      message = `Your SwiftTalk verification code is:`;
+      subject = 'Quorent Verification Code';
+      message = `Your Quorent verification code is:`;
     }
 
     const html = `

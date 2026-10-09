@@ -10,7 +10,7 @@ const isAllowedOrigin = (url) => {
     const allowedOrigins = (process.env.ALLOWED_ORIGINS || '').split(',').map(o => o.trim()).filter(Boolean);
     if (allowedOrigins.includes(url)) return true;
     if (/^https?:\/\/(localhost|127\.0\.0\.1)(:\d+)?$/.test(url)) return true;
-    if (url.includes('.trycloudflare.com') || url.includes('.github.io') || url.includes('swifttalk-api.me') || url.includes('vercel.app')) return true;
+    if (url.includes('.trycloudflare.com') || url.includes('.github.io') || url.includes('quorent-api.me') || url.includes('vercel.app')) return true;
     return false;
 };
 

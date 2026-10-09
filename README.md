@@ -1,6 +1,6 @@
 <div align="center">
-  <img src="client/public/logo192.png" alt="SwiftTalk Logo" width="64" height="64">
-  <h1>SwiftTalk</h1>
+  <img src="client/public/logo192.png" alt="Quorent Logo" width="64" height="64">
+  <h1>Quorent</h1>
   <p><strong>Scalable Full-Stack Real-Time Messaging Application</strong></p>
 
   <p>
@@ -17,7 +17,7 @@
 
 ---
 
-SwiftTalk is a high-performance, real-time messaging platform built for scale. It features a **hybrid polyglot persistence architecture** (MySQL for relational identity, auth, and sessions; MongoDB for high-throughput chats, messages, and read receipts), decouples the REST API from dedicated WebSocket instances scaled via Redis pub/sub, and integrates AI assistance, web push notifications, and OAuth.
+Quorent is a high-performance, real-time messaging platform built for scale. It features a **hybrid polyglot persistence architecture** (MySQL for relational identity, auth, and sessions; MongoDB for high-throughput chats, messages, and read receipts), decouples the REST API from dedicated WebSocket instances scaled via Redis pub/sub, and integrates AI assistance, web push notifications, and OAuth.
 
 ---
 
@@ -37,7 +37,7 @@ SwiftTalk is a high-performance, real-time messaging platform built for scale. I
 ## 🏗️ Architecture & Services
 
 <p align="center">
-  <img src="architecture.png" alt="SwiftTalk System Architecture" width="100%">
+  <img src="architecture.png" alt="Quorent System Architecture" width="100%">
 </p>
 
 | Service              | Port    | Technology                | Purpose                                    |
@@ -57,8 +57,8 @@ SwiftTalk is a high-performance, real-time messaging platform built for scale. I
 
 ```bash
 # 1. Clone repository and setup environment
-git clone https://github.com/RushiK8626/SwiftTalk-Chat-Messaging-App.git
-cd SwiftTalk-Chat-Messaging-App
+git clone https://github.com/RushiK8626/Quorent-Chat-Messaging-App.git
+cd Quorent-Chat-Messaging-App
 cp server/.env.example server/.env
 cp client/.env.example client/.env
 

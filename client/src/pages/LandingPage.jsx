@@ -70,10 +70,10 @@ export default function LandingPage() {
     return (
         <>
             <Helmet>
-                <title>SwiftTalk - Real Time Chat Messaging App</title>
-                <meta name="description" content="Chat, connect, and collaborate with SwiftTalk." />
-                <meta property="og:title" content="SwiftTalk - Real Time Chat Messaging App" />
-                <meta property="og:description" content="Chat, connect, and collaborate with SwiftTalk." />
+                <title>Quorent - Real Time Chat Messaging App</title>
+                <meta name="description" content="Chat, connect, and collaborate with Quorent." />
+                <meta property="og:title" content="Quorent - Real Time Chat Messaging App" />
+                <meta property="og:description" content="Chat, connect, and collaborate with Quorent." />
             </Helmet>
             <div className="lp-root">
                 {/* ── NAV ── */}
@@ -106,7 +106,7 @@ export default function LandingPage() {
                             <span className="lp-gradient-text">Collaborate</span>
                         </h1>
                         <p className="lp-hero-sub">
-                            SwiftTalk brings real-time messaging, AI assistance, rich media sharing,
+                            Quorent brings real-time messaging, AI assistance, rich media sharing,
                             and smart notifications into one beautifully simple app.
                         </p>
                         <div className="lp-hero-actions">
