@@ -1,5 +1,6 @@
-const { Emitter } = require('@socket.io/redis-emitter');
-const { getRedisClient, isAvailable, createDuplicateClient } = require('../config/redis');
+const { Server } = require('socket.io');
+const { createAdapter } = require('@socket.io/redis-streams-adapter');
+const { getRedisClient, isAvailable } = require('../config/redis');
 
 let redisEmitter = null;
 let localIo = null;
@@ -14,10 +15,12 @@ const initSocketEmitter = async (io = null) => {
 
   try {
     if (isAvailable()) {
-      const emitterClient = await createDuplicateClient();
+      const emitterClient = await getRedisClient();
       if (emitterClient) {
-        redisEmitter = new Emitter(emitterClient);
-        console.log('Socket.IO Redis Emitter initialized successfully.');
+        redisEmitter = new Server({
+          adapter: createAdapter(emitterClient)
+        });
+        console.log('Socket.IO Redis Streams Emitter initialized successfully.');
       }
     }
   } catch (error) {

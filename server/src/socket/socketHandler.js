@@ -7,7 +7,7 @@ const prisma = new PrismaClient();
 const path = require('path');
 const fs = require('fs');
 const redis = require("../config/redis");
-const { createAdapter } = require('@socket.io/redis-adapter');
+const { createAdapter } = require('@socket.io/redis-streams-adapter');
 const { setLocalIo } = require('./socketEmitter');
 const Chat = require('../models/mongo/Chat');
 const Message = require('../models/mongo/Message');
@@ -21,12 +21,11 @@ const setupRedisAdapter = async (io) => {
   }
 
   try {
-    const pubClient = await redis.createDuplicateClient();
-    const subClient = await redis.createDuplicateClient();
+    const redisClient = await redis.getRedisClient();
 
-    if (pubClient && subClient) {
-      io.adapter(createAdapter(pubClient, subClient));
-      console.log('Socket.IO Redis Adapter initialized successfully.');
+    if (redisClient) {
+      io.adapter(createAdapter(redisClient));
+      console.log('Socket.IO Redis Streams Adapter initialized successfully.');
       return true;
     }
   } catch (error) {
