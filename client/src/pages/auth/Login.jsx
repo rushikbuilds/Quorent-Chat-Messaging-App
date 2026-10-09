@@ -3,7 +3,7 @@ import { Helmet } from "react-helmet-async";
 import { Link, useNavigate } from "react-router-dom";
 import axios from "axios";
 import { Mail, Lock, Eye, EyeOff } from "lucide-react";
-import { GoogleLoginButton, GithubLoginButton } from 'react-social-login-buttons';
+import { GoogleLoginButton } from 'react-social-login-buttons';
 import { useToast } from "../../hooks/useToast";
 import ToastContainer from "../../components/common/ToastContainer";
 import "./Login.css";
@@ -186,7 +186,6 @@ const Login = () => {
           
           <div className="oauth-buttons">
             <GoogleLoginButton onClick={() => handleOAuthLogin("google")} align="center" />
-            <GithubLoginButton onClick={() => handleOAuthLogin("github")} align="center" />
           </div>
 
           <div className="login-footer">

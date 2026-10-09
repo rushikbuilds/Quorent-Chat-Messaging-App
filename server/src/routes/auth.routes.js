@@ -44,14 +44,7 @@ router.get('/google', (req, res, next) => {
 });
 router.get('/google/callback', passport.authenticate('google', { session: false, failureRedirect: `${process.env.FRONTEND_URL}/login?error=oauth_failed` }), oauthCallback);
 
-// GitHub
-router.get('/github', (req, res, next) => {
-    const state = req.query.returnUrl
-        ? Buffer.from(decodeURIComponent(req.query.returnUrl)).toString('base64')
-        : undefined;
-    passport.authenticate('github', { scope: ['user:email'], state })(req, res, next);
-});
-router.get('/github/callback', passport.authenticate('github', { session: false, failureRedirect: `${process.env.FRONTEND_URL}/login?error=oauth_failed` }), oauthCallback);
+
 
 router.post('/login', authController.login);
 router.post('/verify-otp', authController.verifyLoginOTP);

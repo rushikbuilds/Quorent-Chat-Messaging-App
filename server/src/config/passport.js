@@ -1,6 +1,5 @@
 const passport = require('passport');
 const { Strategy: GoogleStrategy } = require('passport-google-oauth20');
-const { Strategy: GitHubStrategy } = require('passport-github2');
 const { PrismaClient } = require('@prisma/client');
 
 const prisma = new PrismaClient();
@@ -83,35 +82,7 @@ passport.use(new GoogleStrategy(
     }
 ));
 
-// GitHub
-passport.use(new GitHubStrategy(
-    {
-        clientID: process.env.GITHUB_CLIENT_ID,
-        clientSecret: process.env.GITHUB_CLIENT_SECRET,
-        callbackURL: process.env.GITHUB_CALLBACK_URL,
-        scope: ['user:email'],  // needed to get private emails
-    },
-    async (accessToken, refreshToken, profile, done) => {
-        try {
-            // GitHub may return multiple emails; pick the primary verified one
-            const emailObj = profile.emails?.find(e => e.primary && e.verified)
-                ?? profile.emails?.[0];
 
-            if (!emailObj?.value) return done(new Error('GitHub email not available'), null);
-
-            const user = await handleOAuthUser({
-                provider: 'github',
-                provider_id: String(profile.id),
-                email: emailObj.value,
-                full_name: profile.displayName ?? profile.username,
-                profile_pic: profile.photos?.[0]?.value ?? null,
-            });
-            return done(null, user);
-        } catch (err) {
-            return done(err, null);
-        }
-    }
-));
 
 passport.serializeUser((user, done) => done(null, user.user_id));
 passport.deserializeUser(async (id, done) => {
