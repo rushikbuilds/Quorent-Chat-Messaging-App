@@ -1,39 +1,22 @@
 /*
   Warnings:
-
-  - You are about to drop the `aisession` table. If the table is not empty, all the data it contains will be lost.
-  - You are about to drop the `notification` table. If the table is not empty, all the data it contains will be lost.
-  - You are about to drop the `subtask` table. If the table is not empty, all the data it contains will be lost.
-  - You are about to drop the `task` table. If the table is not empty, all the data it contains will be lost.
-  - You are about to drop the `tasktag` table. If the table is not empty, all the data it contains will be lost.
-
+  - Dropping tables safely ignoring case mismatch and foreign key constraints
 */
--- DropForeignKey
-ALTER TABLE `aisession` DROP FOREIGN KEY `AISession_user_id_fkey`;
+SET FOREIGN_KEY_CHECKS=0;
 
--- DropForeignKey
-ALTER TABLE `notification` DROP FOREIGN KEY `Notification_user_id_fkey`;
+DROP TABLE IF EXISTS `AISession`;
+DROP TABLE IF EXISTS `aisession`;
 
--- DropForeignKey
-ALTER TABLE `subtask` DROP FOREIGN KEY `Subtask_task_id_fkey`;
+DROP TABLE IF EXISTS `Notification`;
+DROP TABLE IF EXISTS `notification`;
 
--- DropForeignKey
-ALTER TABLE `task` DROP FOREIGN KEY `Task_user_id_fkey`;
+DROP TABLE IF EXISTS `Subtask`;
+DROP TABLE IF EXISTS `subtask`;
 
--- DropForeignKey
-ALTER TABLE `tasktag` DROP FOREIGN KEY `TaskTag_task_id_fkey`;
+DROP TABLE IF EXISTS `Task`;
+DROP TABLE IF EXISTS `task`;
 
--- DropTable
-DROP TABLE `aisession`;
+DROP TABLE IF EXISTS `TaskTag`;
+DROP TABLE IF EXISTS `tasktag`;
 
--- DropTable
-DROP TABLE `notification`;
-
--- DropTable
-DROP TABLE `subtask`;
-
--- DropTable
-DROP TABLE `task`;
-
--- DropTable
-DROP TABLE `tasktag`;
+SET FOREIGN_KEY_CHECKS=1;
