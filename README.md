@@ -37,7 +37,7 @@ Quorent is a high-performance, real-time messaging platform built for scale. It 
 ## 🏗️ Architecture & Services
 
 <p align="center">
-  <img src="architecture.png" alt="Quorent System Architecture" width="100%">
+  <img src="assets/architecture.png" alt="Quorent System Architecture" width="100%">
 </p>
 
 | Service              | Port    | Technology                | Purpose                                    |
@@ -57,7 +57,7 @@ Quorent is a high-performance, real-time messaging platform built for scale. It 
 
 ```bash
 # 1. Clone repository and setup environment
-git clone https://github.com/RushiK8626/Quorent-Chat-Messaging-App.git
+git clone https://github.com/rushikbuikds/Quorent-Chat-Messaging-App.git
 cd Quorent-Chat-Messaging-App
 cp server/.env.example server/.env
 cp client/.env.example client/.env
