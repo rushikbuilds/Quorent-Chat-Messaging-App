@@ -141,7 +141,7 @@ exports.uploadFileAndCreateMessage = async (req, res) => {
       select: { user_id: true, username: true, full_name: true, profile_pic: true }
     });
 
-    const fileUrl = `/uploads/${req.file.filename}`;
+    const fileUrl = req.file.location || `/uploads/${req.file.filename}`;
     const attachment = {
       file_url: fileUrl,
       original_filename: req.file.originalname,

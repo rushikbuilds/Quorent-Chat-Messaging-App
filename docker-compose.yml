@@ -35,8 +35,9 @@ services:
       start_period: 15s
 
   api-server:
-    build: ./server
-    command: sh -c "npx prisma migrate deploy && node src/server.js"
+    build: 
+      context: ./server
+      dockerfile: Dockerfile.api
     ports:
       - "3001:3001"
     depends_on:
@@ -61,8 +62,9 @@ services:
       start_period: 30s
 
   ws-server:
-    build: ./server
-    command: node src/wsServer.js
+    build: 
+      context: ./server
+      dockerfile: Dockerfile.ws
     ports:
       - "3002:3002"
     depends_on:

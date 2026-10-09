@@ -2,6 +2,9 @@ const multer = require('multer');
 const path = require('path');
 const fs = require('fs');
 
+const { S3Client } = require('@aws-sdk/client-s3');
+const multerS3 = require('multer-s3');
+
 const UPLOADS_DIR = path.join(__dirname, '../../uploads');
 const MAX_FILE_SIZE = 50 * 1024 * 1024; // 50MB
 const BLOCKED_MIMES = ['application/json', 'application/x-javascript', 'text/javascript'];
@@ -17,15 +20,41 @@ const fileFilter = (req, file, cb) => {
   cb(null, true);
 };
 
-const storage = multer.diskStorage({
-  destination: (req, file, cb) => cb(null, UPLOADS_DIR),
-  filename: (req, file, cb) => {
-    const ext = path.extname(file.originalname);
-    const name = path.basename(file.originalname, ext);
-    const suffix = `${Date.now()}-${Math.round(Math.random() * 1e9)}`;
-    cb(null, `${name}-${suffix}${ext}`);
-  }
-});
+const getFileName = (file) => {
+  const ext = path.extname(file.originalname);
+  const name = path.basename(file.originalname, ext);
+  const suffix = `${Date.now()}-${Math.round(Math.random() * 1e9)}`;
+  return `${name}-${suffix}${ext}`;
+};
+
+let storage;
+
+if (process.env.NODE_ENV === 'production' && process.env.AWS_S3_BUCKET_NAME) {
+  const s3 = new S3Client({
+    region: process.env.AWS_REGION,
+    credentials: {
+      accessKeyId: process.env.AWS_ACCESS_KEY_ID,
+      secretAccessKey: process.env.AWS_SECRET_ACCESS_KEY,
+    }
+  });
+
+  storage = multerS3({
+    s3: s3,
+    bucket: process.env.AWS_S3_BUCKET_NAME,
+    contentType: multerS3.AUTO_CONTENT_TYPE,
+    // acl: 'public-read', // Uncomment if bucket ACLs are enabled and public access is needed
+    key: function (req, file, cb) {
+      cb(null, `uploads/${getFileName(file)}`);
+    }
+  });
+} else {
+  storage = multer.diskStorage({
+    destination: (req, file, cb) => cb(null, UPLOADS_DIR),
+    filename: (req, file, cb) => {
+      cb(null, getFileName(file));
+    }
+  });
+}
 
 const upload = multer({
   storage,

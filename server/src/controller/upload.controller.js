@@ -14,7 +14,7 @@ exports.uploadProfilePic = [
         return res.status(400).json({ error: 'No file uploaded' });
       }
 
-      const fileUrl = `/uploads/${req.file.filename}`;
+      const fileUrl = req.file.location || `/uploads/${req.file.filename}`;
 
       await prisma.user.update({
         where: { user_id: req.user.user_id },
@@ -24,7 +24,7 @@ exports.uploadProfilePic = [
       res.status(200).json({
         message: 'Profile picture uploaded successfully',
         file_url: fileUrl,
-        filename: req.file.filename
+        filename: req.file.key || req.file.filename
       });
     } catch (error) {
       console.error('[upload.uploadProfilePic]', error);
@@ -41,7 +41,7 @@ exports.uploadGroupImage = [
         return res.status(400).json({ error: 'No file uploaded' });
       }
 
-      const fileUrl = `/uploads/${req.file.filename}`;
+      const fileUrl = req.file.location || `/uploads/${req.file.filename}`;
       const { chatId } = req.body;
 
       if (chatId) {
@@ -55,7 +55,7 @@ exports.uploadGroupImage = [
       res.status(200).json({
         message: 'Group image uploaded successfully',
         file_url: fileUrl,
-        filename: req.file.filename
+        filename: req.file.key || req.file.filename
       });
     } catch (error) {
       console.error('[upload.uploadGroupImage]', error);
@@ -74,10 +74,10 @@ exports.uploadAttachment = [
 
       res.status(200).json({
         message: 'Attachment uploaded successfully',
-        file_url: `/uploads/${req.file.filename}`,
+        file_url: req.file.location || `/uploads/${req.file.filename}`,
         file_type: req.file.mimetype,
         file_size: req.file.size,
-        filename: req.file.filename
+        filename: req.file.key || req.file.filename
       });
     } catch (error) {
       console.error('[upload.uploadAttachment]', error);

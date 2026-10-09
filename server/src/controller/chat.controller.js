@@ -43,7 +43,7 @@ const hydrateMembersWithProfiles = async (members) => {
 exports.createChat = async (req, res) => {
   try {
     const { chat_type, chat_name, member_ids, admin_id, description } = req.body;
-    let groupImagePath = req.file ? `/uploads/${req.file.filename}` : null;
+    let groupImagePath = req.file ? (req.file.location || `/uploads/${req.file.filename}`) : null;
 
     if (!chat_type || !['private', 'group'].includes(chat_type)) {
       return res.status(400).json({ error: 'Invalid chat type. Must be "private" or "group"' });
@@ -589,7 +589,7 @@ exports.updateChat = async (req, res) => {
   try {
     const { id } = req.params;
     const { chat_name, description } = req.body;
-    let chatImagePath = req.file ? `/uploads/${req.file.filename}` : null;
+    let chatImagePath = req.file ? (req.file.location || `/uploads/${req.file.filename}`) : null;
 
     const chat = await Chat.findByChatId(id);
     if (!chat) return res.status(404).json({ error: 'Chat not found' });
