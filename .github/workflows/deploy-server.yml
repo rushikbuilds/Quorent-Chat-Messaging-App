@@ -1,0 +1,87 @@
+name: Build & Deploy Backend to AWS ECS
+
+on:
+  push:
+    branches: ["main", "master"]
+    paths:
+      - "server/**"
+      - ".github/workflows/deploy-server.yml"
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  deploy:
+    name: Build, Push to ECR & Deploy to ECS
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout Code
+        uses: actions/checkout@v4
+
+      - name: Configure AWS Credentials
+        uses: aws-actions/configure-aws-credentials@v4
+        with:
+          aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
+          aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+          aws-region: ${{ secrets.AWS_REGION || 'ap-south-1' }}
+
+      - name: Log in to Amazon ECR
+        id: login-ecr
+        uses: aws-actions/amazon-ecr-login@v2
+
+      - name: Set up Docker Buildx
+        uses: docker/setup-buildx-action@v3
+
+      - name: Build and Push API Image
+        uses: docker/build-push-action@v6
+        with:
+          context: ./server
+          file: ./server/Dockerfile.api
+          push: true
+          tags: |
+            ${{ steps.login-ecr.outputs.registry }}/quorent-api:latest
+            ${{ steps.login-ecr.outputs.registry }}/quorent-api:${{ github.sha }}
+          cache-from: type=gha
+          cache-to: type=gha,mode=max
+
+      - name: Build and Push WebSocket Image
+        uses: docker/build-push-action@v6
+        with:
+          context: ./server
+          file: ./server/Dockerfile.ws
+          push: true
+          tags: |
+            ${{ steps.login-ecr.outputs.registry }}/quorent-websocket:latest
+            ${{ steps.login-ecr.outputs.registry }}/quorent-websocket:${{ github.sha }}
+          cache-from: type=gha
+          cache-to: type=gha,mode=max
+
+      - name: Deploy API and WebSocket Services
+        env:
+          CLUSTER_NAME: ${{ secrets.ECS_CLUSTER }}
+          API_SERVICE_NAME: ${{ secrets.ECS_SERVICE_API }}
+          WS_SERVICE_NAME: ${{ secrets.ECS_SERVICE_WS }}
+        run: |
+          set -euo pipefail
+
+          test -n "$CLUSTER_NAME"
+          test -n "$API_SERVICE_NAME"
+          test -n "$WS_SERVICE_NAME"
+
+          aws ecs update-service \
+            --cluster "$CLUSTER_NAME" \
+            --service "$API_SERVICE_NAME" \
+            --force-new-deployment
+
+          aws ecs update-service \
+            --cluster "$CLUSTER_NAME" \
+            --service "$WS_SERVICE_NAME" \
+            --force-new-deployment
+
+          aws ecs wait services-stable \
+            --cluster "$CLUSTER_NAME" \
+            --services "$API_SERVICE_NAME" "$WS_SERVICE_NAME"
+
+          echo "Both ECS services are stable."
