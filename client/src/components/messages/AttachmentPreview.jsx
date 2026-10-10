@@ -22,6 +22,15 @@ const AttachmentPreview = ({ attachment, isUploading = false, uploadProgress = 0
   // Build fetch URL - wrapped in useCallback to avoid recreating on every render
   const buildFetchUrl = useCallback((fileUrl) => {
     if (!fileUrl) return null;
+    // If it's already a presigned URL, return it directly
+    if (fileUrl.includes("X-Amz-Signature") || fileUrl.includes("signature=")) {
+      return fileUrl;
+    }
+    // If it's a full S3 URL without signature, route through backend to get a presigned URL
+    if (fileUrl.includes(".amazonaws.com/")) {
+      const filename = fileUrl.split("/").pop();
+      return `${base}/uploads/${filename}`;
+    }
     if (fileUrl.startsWith("http")) return fileUrl;
     if (fileUrl.startsWith("/")) return `${base}${fileUrl}`;
     if (fileUrl.includes("/uploads/"))
@@ -66,7 +75,8 @@ const AttachmentPreview = ({ attachment, isUploading = false, uploadProgress = 0
         return;
       }
       try {
-        const headers = token ? { Authorization: `Bearer ${token}` } : {};
+        const isInternalApi = url.startsWith(base);
+        const headers = (token && isInternalApi) ? { Authorization: `Bearer ${token}` } : {};
         let res = await fetch(url, { headers });
 
         if (res.status === 401 && refreshToken) {

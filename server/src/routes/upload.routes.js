@@ -9,6 +9,7 @@ router.post('/attachment', verifyToken, uploadController.uploadAttachment);
 router.get('/profiles/:filename', uploadController.getProfilePicture);
 router.get('/chat-images/:filename', verifyToken, uploadController.getChatImage);
 router.get('/attachments/:filename', verifyToken, uploadController.getAttachment);
+router.get('/presigned/:filename', optionalAuth, uploadController.getPresignedUrl);
 router.get('/:filename', optionalAuth, uploadController.getFile);
 
 module.exports = router;

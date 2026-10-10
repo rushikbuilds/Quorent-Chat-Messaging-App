@@ -11,6 +11,7 @@ const { createAdapter } = require('@socket.io/redis-streams-adapter');
 const { setLocalIo } = require('./socketEmitter');
 const Chat = require('../models/mongo/Chat');
 const Message = require('../models/mongo/Message');
+const { isS3Enabled, uploadBufferToS3 } = require('../services/s3.service');
 
 let ioInstance = null;
 
@@ -57,29 +58,44 @@ const _processCompleteFileMessage = async (fileData, socket, io, userId) => {
       return;
     }
 
-    const uploadsDir = path.join(__dirname, '../../uploads');
     const uniqueSuffix = Date.now() + '-' + Math.round(Math.random() * 1E9);
     const ext = path.extname(fileName);
     const nameWithoutExt = path.basename(fileName, ext);
     const serverFilename = nameWithoutExt + '-' + uniqueSuffix + ext;
-    const filePath = path.join(uploadsDir, serverFilename);
-
-    await fs.promises.mkdir(uploadsDir, { recursive: true });
+    const fileKey = `uploads/${serverFilename}`;
 
     let buffer = fileBuffer;
     if (typeof fileBuffer === 'string') {
       buffer = Buffer.from(fileBuffer, 'base64');
     }
 
-    try {
-      await fs.promises.writeFile(filePath, buffer);
-    } catch (writeErr) {
-      socket.emit('file_upload_error', {
-        error: 'Failed to save file to disk',
-        details: writeErr.message,
-        tempId: tempId
-      });
-      return;
+    if (isS3Enabled()) {
+      try {
+        await uploadBufferToS3(buffer, fileKey, fileType);
+      } catch (s3Err) {
+        console.error('[socketHandler.uploadBufferToS3]', s3Err);
+        socket.emit('file_upload_error', {
+          error: 'Failed to upload file to S3 storage',
+          details: s3Err.message,
+          tempId: tempId
+        });
+        return;
+      }
+    } else {
+      const uploadsDir = path.join(__dirname, '../../uploads');
+      const filePath = path.join(uploadsDir, serverFilename);
+      await fs.promises.mkdir(uploadsDir, { recursive: true });
+
+      try {
+        await fs.promises.writeFile(filePath, buffer);
+      } catch (writeErr) {
+        socket.emit('file_upload_error', {
+          error: 'Failed to save file to disk',
+          details: writeErr.message,
+          tempId: tempId
+        });
+        return;
+      }
     }
 
     const fileUrl = `/uploads/${serverFilename}`;

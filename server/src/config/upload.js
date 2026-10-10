@@ -2,8 +2,8 @@ const multer = require('multer');
 const path = require('path');
 const fs = require('fs');
 
-const { S3Client } = require('@aws-sdk/client-s3');
 const multerS3 = require('multer-s3');
+const { isS3Enabled, getS3Client, getS3BucketName } = require('../services/s3.service');
 
 const UPLOADS_DIR = path.join(__dirname, '../../uploads');
 const MAX_FILE_SIZE = 50 * 1024 * 1024; // 50MB
@@ -29,20 +29,13 @@ const getFileName = (file) => {
 
 let storage;
 
-if (process.env.NODE_ENV === 'production' && process.env.AWS_S3_BUCKET_NAME) {
-  const s3 = new S3Client({
-    region: process.env.AWS_REGION,
-    credentials: {
-      accessKeyId: process.env.AWS_ACCESS_KEY_ID,
-      secretAccessKey: process.env.AWS_SECRET_ACCESS_KEY,
-    }
-  });
+if (isS3Enabled()) {
+  const s3 = getS3Client();
 
   storage = multerS3({
     s3: s3,
-    bucket: process.env.AWS_S3_BUCKET_NAME,
+    bucket: getS3BucketName(),
     contentType: multerS3.AUTO_CONTENT_TYPE,
-    // acl: 'public-read', // Uncomment if bucket ACLs are enabled and public access is needed
     key: function (req, file, cb) {
       cb(null, `uploads/${getFileName(file)}`);
     }

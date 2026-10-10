@@ -68,7 +68,7 @@ export const getFileLogo = (filename, mimeType) => {
     // Images
     jpg: "jpg.svg",
     jpeg: "jpeg.svg",
-    png: "image.svg",
+    png: "PNG.svg",
     gif: "gif.svg",
     webp: "webp.svg",
     bmp: "bmp.svg",
@@ -199,7 +199,7 @@ export const getFileLogo = (filename, mimeType) => {
 
   // Fallback based on MIME type
   if (mime.startsWith("image/")) {
-    return "/file-logos/image.svg";
+    return "/file-logos/PNG.svg";
   }
   if (mime.startsWith("audio/")) {
     return "/file-logos/audio.svg";
