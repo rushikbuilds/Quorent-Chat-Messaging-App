@@ -3,24 +3,35 @@ const fs = require('fs');
 const { PrismaClient } = require('@prisma/client');
 const prisma = new PrismaClient();
 const { uploadProfile, uploadGroup, uploadFiles } = require('../config/upload');
-const { isS3Enabled, getPresignedDownloadUrl } = require('../services/s3.service');
+const { isS3Enabled, getPresignedDownloadUrl, getS3ObjectStream } = require('../services/s3.service');
 const Chat = require('../models/mongo/Chat');
 const Message = require('../models/mongo/Message');
 
 /**
- * Helper to serve a file from local disk (development) or redirect to an S3 presigned URL (production)
+ * Helper to stream file directly from S3 (production) or local disk (development).
+ * If explicitly requested (?presigned=true or ?json=true), returns a presigned URL instead.
  */
-const serveOrRedirectFile = async (req, res, filename) => {
+const serveOrStreamFile = async (req, res, filename) => {
   if (isS3Enabled()) {
     try {
-      const presignedUrl = await getPresignedDownloadUrl(`uploads/${filename}`);
-      if (req.query.json === 'true' || req.headers.accept === 'application/json') {
+      // Option A: Return presigned URL directly if requested
+      if (req.query.presigned === 'true' || req.query.json === 'true' || req.headers['x-want-presigned'] === 'true') {
+        const presignedUrl = await getPresignedDownloadUrl(`uploads/${filename}`);
         return res.json({ success: true, url: presignedUrl, filename });
       }
-      return res.redirect(presignedUrl);
+
+      // Option B: Stream directly through API (No 302 redirect, zero S3 CORS issues)
+      const obj = await getS3ObjectStream(`uploads/${filename}`);
+      if (obj.ContentType) res.setHeader('Content-Type', obj.ContentType);
+      if (obj.ContentLength) res.setHeader('Content-Length', obj.ContentLength);
+      if (obj.ETag) res.setHeader('ETag', obj.ETag);
+      return obj.Body.pipe(res);
     } catch (err) {
-      console.error('[upload.serveOrRedirectFile] S3 Presigned URL error:', err);
-      return res.status(500).json({ error: 'Failed to generate download URL' });
+      if (err.name === 'NoSuchKey' || err.$metadata?.httpStatusCode === 404) {
+        return res.status(404).json({ error: 'File not found' });
+      }
+      console.error('[upload.serveOrStreamFile] S3 stream error:', err);
+      return res.status(500).json({ error: 'Failed to stream file from storage' });
     }
   }
 
@@ -129,7 +140,7 @@ exports.getChatImage = async (req, res) => {
     const isMember = chat.members.some(m => m.user_id === req.user?.user_id);
     if (!isMember) return res.status(403).json({ error: 'Access denied. You are not a member of this chat.' });
 
-    return serveOrRedirectFile(req, res, filename);
+    return serveOrStreamFile(req, res, filename);
   } catch (error) {
     console.error('[upload.getChatImage]', error);
     res.status(500).json({ error: 'Error serving file' });
@@ -151,7 +162,7 @@ exports.getAttachment = async (req, res) => {
       return res.status(403).json({ error: 'Access denied. You are not a member of this conversation.' });
     }
 
-    return serveOrRedirectFile(req, res, filename);
+    return serveOrStreamFile(req, res, filename);
   } catch (error) {
     console.error('[upload.getAttachment]', error);
     res.status(500).json({ error: 'Error serving file' });
@@ -161,7 +172,7 @@ exports.getAttachment = async (req, res) => {
 exports.getProfilePicture = async (req, res) => {
   try {
     const filename = req.params.filename;
-    return serveOrRedirectFile(req, res, filename);
+    return serveOrStreamFile(req, res, filename);
   } catch (error) {
     console.error('[upload.getProfilePicture]', error);
     res.status(500).json({ error: 'Error serving file' });
@@ -182,12 +193,12 @@ exports.getFile = async (req, res) => {
         ]
       }
     });
-    if (userWithProfilePic) return serveOrRedirectFile(req, res, filename);
+    if (userWithProfilePic) return serveOrStreamFile(req, res, filename);
 
     const chatWithImage = await Chat.findOne({
       chat_image: { $regex: filename }
     });
-    if (chatWithImage) return serveOrRedirectFile(req, res, filename);
+    if (chatWithImage) return serveOrStreamFile(req, res, filename);
 
     const message = await Message.findOne({
       "attachments.file_url": { $regex: filename }
@@ -196,15 +207,15 @@ exports.getFile = async (req, res) => {
       if (req.user) {
         const chat = await Chat.findByChatId(message.chat_id);
         if (chat && chat.members.some(m => m.user_id === req.user.user_id)) {
-          return serveOrRedirectFile(req, res, filename);
+          return serveOrStreamFile(req, res, filename);
         }
       } else {
-        return serveOrRedirectFile(req, res, filename);
+        return serveOrStreamFile(req, res, filename);
       }
     }
 
-    // Default fallback to serve if file exists
-    return serveOrRedirectFile(req, res, filename);
+    // Default fallback to stream if file exists
+    return serveOrStreamFile(req, res, filename);
   } catch (error) {
     console.error('[upload.getFile]', error);
     res.status(500).json({ error: 'Error serving file' });

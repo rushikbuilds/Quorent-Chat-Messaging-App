@@ -73,11 +73,25 @@ const deleteFromS3 = async (key) => {
   return await client.send(command);
 };
 
+/**
+ * Get S3 object stream for proxying directly through API
+ */
+const getS3ObjectStream = async (key) => {
+  const client = getS3Client();
+  const cleanKey = key.replace(/^\/+/, '');
+  const command = new GetObjectCommand({
+    Bucket: getS3BucketName(),
+    Key: cleanKey
+  });
+  return await client.send(command);
+};
+
 module.exports = {
   isS3Enabled,
   getS3Client,
   getS3BucketName,
   uploadBufferToS3,
   getPresignedDownloadUrl,
+  getS3ObjectStream,
   deleteFromS3
 };
