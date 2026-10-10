@@ -164,7 +164,7 @@ exports.uploadFileAndCreateMessage = async (req, res) => {
         full_name: senderUser.full_name,
         profile_pic: senderUser.profile_pic
       } : null,
-      message_text: message_text || req.file.originalname,
+      message_text: message_text ? message_text.trim() : '',
       message_type: messageType,
       attachments: [attachment],
       status: statusData,

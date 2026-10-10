@@ -2280,7 +2280,19 @@ const ChatWindow = ({
                             </div>
                           </div>
                         )}
-                        {!message.message_text && !message.attachments && (
+                        {!message.message_text && message.attachments && message.attachments.length > 0 && (
+                          <div className="message-meta attachment-only-meta" style={{ display: 'flex', justifyContent: 'flex-end', alignItems: 'center', gap: '4px', marginTop: '2px', padding: '0 4px' }}>
+                            <span className="message-time">
+                              {message.updated ? `Edited at ${formatMessageTime(message.updated_at)}` : formatMessageTime(message.created_at)}
+                            </span>
+                            <MessageStatusIndicator
+                              messageId={message.message_id}
+                              statuses={messageStatuses[message.message_id]}
+                              currentUserId={userId}
+                            />
+                          </div>
+                        )}
+                        {!message.message_text && (!message.attachments || message.attachments.length === 0) && (
                           <div className="message-bubble">
                             <p className="message-text">Empty message</p>
                             <div className="message-meta">
@@ -2510,19 +2522,15 @@ const ChatWindow = ({
                     {!message.message_text &&
                       message.attachments &&
                       message.attachments.length > 0 && (
-                        <div className="message-bubble">
+                        <div className="message-meta attachment-only-meta" style={{ display: 'flex', alignItems: 'center', gap: '6px', marginTop: '2px', padding: '0 4px' }}>
                           {isGroup && (
-                            <div
+                            <span
                               className="message-sender clickable"
                               style={{
-                                fontSize: 13,
+                                fontSize: 12,
                                 fontWeight: 500,
-                                color: "#555",
-                                marginBottom: 2,
+                                color: "var(--sender-name-color, #1976d2)",
                                 cursor: "pointer",
-                              }}
-                              onClick={() => {
-                                /* Placeholder for future action */
                               }}
                             >
                               {message.sender_id &&
@@ -2531,13 +2539,11 @@ const ChatWindow = ({
                                 : message.sender?.full_name ||
                                 message.sender?.username ||
                                 "Unknown User"}
-                            </div>
-                          )}
-                          <div className="message-meta">
-                            <span className="message-time">
-                              {formatMessageTime(message.created_at)}
                             </span>
-                          </div>
+                          )}
+                          <span className="message-time">
+                            {formatMessageTime(message.created_at)}
+                          </span>
                         </div>
                       )}
                   </div>
@@ -2720,16 +2726,13 @@ const ChatWindow = ({
 
             <form
               onSubmit={(e) => {
+                e.preventDefault();
                 if (messageEditing) {
                   handleSendEditedMessage();
-                }
-                else {
-                  e.preventDefault();
-                  if (selectedFile) {
-                    handleSendWithAttachment();
-                  } else {
-                    handleSendMessage(e);
-                  }
+                } else if (selectedFile) {
+                  handleSendWithAttachment();
+                } else {
+                  handleSendMessage(e);
                 }
               }}
               className="message-input-form"
@@ -2809,7 +2812,7 @@ const ChatWindow = ({
               <button
                 type="submit"
                 className="send-btn"
-                disabled={uploading || isCreatingChat || (!messageText.trim() && !selectedFile) || (messageText === editingMessage)}
+                disabled={uploading || isCreatingChat || (!messageText.trim() && !selectedFile) || (messageEditing && messageText === editingMessage)}
               >
                 <Send size={22} />
               </button>

@@ -148,7 +148,7 @@ const _processCompleteFileMessage = async (fileData, socket, io, userId) => {
         full_name: socket.user.full_name,
         profile_pic: socket.user.profile_pic
       },
-      message_text: message_text || fileName,
+      message_text: message_text ? message_text.trim() : '',
       message_type: messageType,
       is_reply: !!targetReplyId,
       referenced_message_id: targetReplyId ? String(targetReplyId) : null,
@@ -173,7 +173,7 @@ const _processCompleteFileMessage = async (fileData, socket, io, userId) => {
           last_message: {
             message_id: messageDoc.message_id,
             sender_id: sender_id,
-            message_text: messageDoc.message_text,
+            message_text: messageDoc.message_text || (messageType === 'image' ? '📷 Photo' : '📎 Attachment'),
             message_type: messageDoc.message_type,
             created_at: messageDoc.created_at
           },

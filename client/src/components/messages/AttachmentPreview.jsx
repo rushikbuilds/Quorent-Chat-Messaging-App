@@ -1,4 +1,5 @@
 import React, { useEffect, useState, useCallback } from "react";
+import { ExternalLink, Download } from "lucide-react";
 import { getFileLogo, isImageFile, formatFileSize } from "../../utils/file";
 import "./AttachmentPreview.css";
 
@@ -263,16 +264,20 @@ const AttachmentPreview = ({ attachment, isUploading = false, uploadProgress = 0
           </div>
           <div className="attachment-actions">
             <button
+              type="button"
+              className="attachment-action-btn open-btn"
               onClick={handleOpen}
-              style={{ color: "var(--primary-color, #1976d2)" }}
             >
-              Open
+              <ExternalLink size={13} />
+              <span>Open</span>
             </button>
             <button
+              type="button"
+              className="attachment-action-btn download-btn"
               onClick={handleDownload}
-              style={{ color: "var(--primary-color, #1976d2)" }}
             >
-              Download
+              <Download size={13} />
+              <span>Download</span>
             </button>
           </div>
         </div>
@@ -282,32 +287,32 @@ const AttachmentPreview = ({ attachment, isUploading = false, uploadProgress = 0
   if (isImageFile(displayFilename, mimeType))
     return (
       <div className="attachment-preview image">
-        <img
-          src={blobUrl}
-          alt={displayFilename}
-          className="attachment-thumb"
-          onClick={() => setShowFullscreen(true)}
-        />
-        <div className="attachment-info">
-          <div className="attachment-name">{displayFilename}</div>
+        <div className="attachment-image-card">
+          <img
+            src={blobUrl}
+            alt={displayFilename}
+            className="attachment-thumb"
+            onClick={() => setShowFullscreen(true)}
+          />
+        </div>
+        <div className="attachment-info attachment-image-info">
+          <div className="attachment-name" title={displayFilename}>{displayFilename}</div>
           <div className="attachment-actions">
             <button
-              onClick={() => setShowFullscreen(true)}
-              style={{ color: "var(--primary-color, #1976d2)" }}
-            >
-              View
-            </button>
-            <button
-              onClick={handleDownload}
-              style={{ color: "var(--primary-color, #1976d2)" }}
-            >
-              Download
-            </button>
-            <button
+              type="button"
+              className="attachment-action-btn open-btn"
               onClick={handleOpen}
-              style={{ color: "var(--primary-color, #1976d2)" }}
             >
-              Open
+              <ExternalLink size={13} />
+              <span>Open</span>
+            </button>
+            <button
+              type="button"
+              className="attachment-action-btn download-btn"
+              onClick={handleDownload}
+            >
+              <Download size={13} />
+              <span>Download</span>
             </button>
           </div>
         </div>
@@ -316,8 +321,9 @@ const AttachmentPreview = ({ attachment, isUploading = false, uploadProgress = 0
             className="attachment-fullscreen"
             onClick={() => setShowFullscreen(false)}
           >
-            <img src={blobUrl} alt={displayFilename} />
+            <img src={blobUrl} alt={displayFilename} className="fullscreen-image" />
             <button
+              type="button"
               className="close-fullscreen"
               onClick={() => setShowFullscreen(false)}
             >
@@ -341,22 +347,26 @@ const AttachmentPreview = ({ attachment, isUploading = false, uploadProgress = 0
         />
       </div>
       <div className="attachment-info">
-        <div className="attachment-name">{displayFilename}</div>
+        <div className="attachment-name" title={displayFilename}>{displayFilename}</div>
         <div className="attachment-size">
           {blobSize ? formatFileSize(blobSize) : "Unknown"}
         </div>
         <div className="attachment-actions">
           <button
+            type="button"
+            className="attachment-action-btn open-btn"
             onClick={handleOpen}
-            style={{ color: "var(--primary-color, #1976d2)" }}
           >
-            Open
+            <ExternalLink size={13} />
+            <span>Open</span>
           </button>
           <button
+            type="button"
+            className="attachment-action-btn download-btn"
             onClick={handleDownload}
-            style={{ color: "var(--primary-color, #1976d2)" }}
           >
-            Download
+            <Download size={13} />
+            <span>Download</span>
           </button>
         </div>
       </div>

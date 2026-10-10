@@ -3,27 +3,27 @@
   align-items: center;
   gap: 12px;
   padding: 10px 12px;
-  border-radius: 8px;
-  background: var(--card-background, white);
-  border: 1px solid var(--border-color, #e0e0e0);
-  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.08);
+  border-radius: 10px;
+  background: var(--card-background, rgba(255, 255, 255, 0.05));
+  border: 1px solid var(--border-color, rgba(255, 255, 255, 0.1));
+  box-shadow: 0 1px 4px rgba(0, 0, 0, 0.12);
   margin: 4px 0;
   max-width: 100%;
   width: 100%;
 }
 
 .attachment-preview.loading {
-  color: var(--text-secondary, #666);
+  color: var(--text-secondary, #999);
   font-size: 13px;
   justify-content: center;
   padding: 14px;
-  background: var(--hover-background, #f5f5f5);
+  background: var(--hover-background, rgba(255, 255, 255, 0.03));
 }
 
 .attachment-preview.uploading {
-  background: var(--card-background, white);
-  border: 1px solid var(--primary-color, #1976d2);
-  border-left: 3px solid var(--primary-color, #1976d2);
+  background: var(--card-background, rgba(255, 255, 255, 0.05));
+  border: 1px solid var(--primary-color, #ff9800);
+  border-left: 3px solid var(--primary-color, #ff9800);
 }
 
 .attachment-upload-progress {
@@ -36,41 +36,41 @@
 .upload-progress-bar-container {
   width: 100%;
   height: 6px;
-  background: var(--border-color, #e0e0e0);
+  background: var(--border-color, rgba(255, 255, 255, 0.1));
   border-radius: 3px;
   overflow: hidden;
 }
 
 .upload-progress-bar-fill {
   height: 100%;
-  background: linear-gradient(90deg, var(--primary-color, #1976d2), var(--accent-color, #42a5f5));
+  background: linear-gradient(90deg, var(--primary-color, #ff9800), #ffb74d);
   border-radius: 3px;
   transition: width 0.15s ease-out;
 }
 
 .upload-progress-text {
   font-size: 11px;
-  color: var(--primary-color, #1976d2);
+  color: var(--primary-color, #ff9800);
   font-weight: 500;
 }
 
 .attachment-preview.error {
-  color: #d32f2f;
+  color: #ef5350;
   flex-direction: row;
   padding: 10px 12px;
-  background: var(--card-background, white);
+  background: var(--card-background, rgba(255, 255, 255, 0.05));
   max-width: 100%;
   width: 100%;
 }
 
 .attachment-logo-wrapper {
   flex-shrink: 0;
-  width: 56px;
-  height: 56px;
+  width: 52px;
+  height: 52px;
   display: flex;
   align-items: center;
   justify-content: center;
-  background: var(--hover-background, #f5f5f5);
+  background: var(--hover-background, rgba(255, 255, 255, 0.06));
   border-radius: 8px;
 }
 
@@ -81,29 +81,42 @@
   padding: 6px;
 }
 
-.attachment-icon {
-  font-size: 24px;
-  flex-shrink: 0;
-}
-
+/* Image attachment styling */
 .attachment-preview.image {
   padding: 0;
   background: transparent;
   border: none;
   box-shadow: none;
   flex-direction: column;
-  max-width: 100%;
-  width: auto;
+  max-width: 320px;
+  width: 100%;
+  margin: 4px 0;
+}
+
+.attachment-image-card {
+  position: relative;
+  width: 100%;
+  max-height: 280px;
+  overflow: hidden;
+  border-radius: 12px;
+  background: rgba(0, 0, 0, 0.2);
+  border: 1px solid var(--border-color, rgba(255, 255, 255, 0.12));
+  cursor: pointer;
 }
 
 .attachment-thumb {
   max-width: 100%;
-  max-height: 300px;
-  border-radius: 8px;
-  object-fit: contain;
+  max-height: 280px;
+  object-fit: cover;
   display: block;
   width: 100%;
   height: auto;
+  transition: transform 0.25s ease, filter 0.25s ease;
+}
+
+.attachment-thumb:hover {
+  transform: scale(1.02);
+  filter: brightness(1.05);
 }
 
 .attachment-info {
@@ -114,10 +127,18 @@
   min-width: 0;
 }
 
+.attachment-image-info {
+  width: 100%;
+  padding: 6px 2px 2px 2px;
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
 .attachment-name {
-  font-weight: 600;
-  font-size: 14px;
-  color: var(--text-color, #222);
+  font-weight: 500;
+  font-size: 13px;
+  color: var(--text-color, #e0e0e0);
   word-break: break-word;
   white-space: nowrap;
   overflow: hidden;
@@ -136,34 +157,39 @@
   flex-wrap: wrap;
 }
 
-.attachment-actions button {
+.attachment-action-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
   background: transparent;
-  border: 1px solid var(--primary-color, #1976d2);
-  padding: 6px 12px;
+  border: 1px solid var(--primary-color, #ff9800);
+  padding: 5px 14px;
   border-radius: 6px;
   cursor: pointer;
   font-size: 12px;
   font-weight: 500;
-  color: var(--primary-color, #1976d2);
-  transition: all 0.2s;
+  color: var(--primary-color, #ff9800);
+  transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+  user-select: none;
 }
 
-.attachment-actions button:hover {
-  background: var(--primary-color, #1976d2);
-  color: white;
+.attachment-action-btn:hover {
+  background: var(--primary-color, #ff9800);
+  color: #fff;
+  transform: translateY(-1px);
+  box-shadow: 0 2px 8px rgba(255, 152, 0, 0.25);
 }
 
-.attachment-actions button:disabled {
+.attachment-action-btn:active {
+  transform: translateY(0);
+}
+
+.attachment-action-btn:disabled {
   opacity: 0.5;
   cursor: not-allowed;
 }
 
-.attachment-actions a {
-  color: var(--primary-color, #1976d2);
-  text-decoration: none;
-}
-
-/* Fullscreen styles */
+/* Fullscreen modal */
 .attachment-fullscreen {
   position: fixed;
   inset: 0;
@@ -172,35 +198,26 @@
   justify-content: center;
   background: rgba(0, 0, 0, 0.95);
   z-index: 9999;
-}
-
-.fullscreen-content {
-  position: relative;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  width: 100%;
-  height: 100%;
-  padding: 20px;
+  backdrop-filter: blur(8px);
 }
 
 .fullscreen-image {
-  max-width: 98vw;
-  max-height: 98vh;
+  max-width: 95vw;
+  max-height: 92vh;
   width: auto;
   height: auto;
   border-radius: 8px;
   object-fit: contain;
-  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.5);
+  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.6);
 }
 
 .close-fullscreen {
   position: fixed;
-  top: 20px;
-  right: 20px;
-  font-size: 32px;
-  color: white;
-  background: rgba(0, 0, 0, 0.6);
+  top: 24px;
+  right: 24px;
+  font-size: 28px;
+  color: #fff;
+  background: rgba(255, 255, 255, 0.15);
   border: none;
   cursor: pointer;
   width: 44px;
@@ -209,51 +226,26 @@
   display: flex;
   align-items: center;
   justify-content: center;
-  transition: background 0.2s;
+  transition: all 0.2s;
   z-index: 10000;
 }
 
 .close-fullscreen:hover {
-  background: rgba(0, 0, 0, 0.8);
-}
-
-.download-fullscreen {
-  position: fixed;
-  bottom: 30px;
-  right: 30px;
-  font-size: 20px;
-  color: white;
-  background: var(--accent-color, #9c27b0);
-  border: none;
-  cursor: pointer;
-  width: 56px;
-  height: 56px;
-  border-radius: 50%;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  transition: all 0.2s ease;
-  z-index: 10000;
-  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
-}
-
-.download-fullscreen:hover {
-  background: var(--accent-color, #9c27b0);
-  transform: scale(1.1);
-  box-shadow: 0 6px 16px rgba(0, 0, 0, 0.4);
+  background: rgba(255, 255, 255, 0.3);
+  transform: scale(1.05);
 }
 
 .attachment-preview.file {
   padding: 8px 12px;
-  background: rgba(0, 0, 0, 0.05);
-  border-radius: 8px;
-  cursor: pointer;
-  transition: background 0.2s;
+  background: var(--card-background, rgba(255, 255, 255, 0.05));
+  border-radius: 10px;
+  transition: background 0.2s, border-color 0.2s;
   margin: 6px 0;
   max-width: 100%;
   width: 100%;
+  border: 1px solid var(--border-color, rgba(255, 255, 255, 0.1));
 }
 
 .attachment-preview.file:hover {
-  background: rgba(0, 0, 0, 0.1);
+  background: var(--hover-background, rgba(255, 255, 255, 0.08));
 }
