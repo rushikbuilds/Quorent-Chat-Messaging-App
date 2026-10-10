@@ -43,6 +43,10 @@ jobs:
           VITE_APP_SOCKET_URL: 'https://ws.quorent.xyz'
         run: npm run build
 
+      - name: Fix SPA Routing (Copy index.html to 404.html)
+        working-directory: ./client
+        run: cp build/index.html build/404.html
+
       - name: Setup Pages
         uses: actions/configure-pages@v4
         
