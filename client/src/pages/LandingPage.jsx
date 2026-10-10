@@ -83,7 +83,7 @@ export default function LandingPage() {
                             <span className="lp-logo-icon">
                                 <img src="/logo192.png" alt="Logo" />
                             </span>
-                            <span className="lp-logo-text">SwiftTak</span>
+                            <span className="lp-logo-text">Quorent</span>
                         </div>
                         <div className="lp-nav-cta">
                             <button className="lp-btn lp-btn-ghost" onClick={() => navigate("/login")}>
@@ -153,7 +153,7 @@ export default function LandingPage() {
                             <span className="lp-logo-icon">
                                 <img src="/logo192.png" alt="Logo" />
                             </span>
-                            <span className="lp-logo-text">SwiftTak</span>
+                            <span className="lp-logo-text">Quorent</span>
                         </div>
                         <p className="lp-footer-copy">© {new Date().getFullYear()} SwiftTak. All rights reserved.</p>
                     </div>
