@@ -4,8 +4,7 @@ CREATE TABLE `User` (
     `username` VARCHAR(191) NOT NULL,
     `full_name` VARCHAR(191) NULL,
     `email` VARCHAR(191) NULL,
-    `phone` VARCHAR(191) NULL,
-    `profile_pic` VARCHAR(191) NULL,
+    `profile_pic` TEXT NULL,
     `status_message` VARCHAR(191) NULL,
     `verified` BOOLEAN NOT NULL DEFAULT false,
     `is_online` BOOLEAN NOT NULL DEFAULT false,
@@ -14,7 +13,6 @@ CREATE TABLE `User` (
 
     UNIQUE INDEX `User_username_key`(`username`),
     UNIQUE INDEX `User_email_key`(`email`),
-    UNIQUE INDEX `User_phone_key`(`phone`),
     PRIMARY KEY (`user_id`)
 ) DEFAULT CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;
 
@@ -22,7 +20,7 @@ CREATE TABLE `User` (
 CREATE TABLE `Auth` (
     `auth_id` INTEGER NOT NULL AUTO_INCREMENT,
     `user_id` INTEGER NOT NULL,
-    `password_hash` VARCHAR(191) NOT NULL,
+    `password_hash` VARCHAR(191) NULL,
     `last_login` DATETIME(3) NULL,
     `refresh_token` TEXT NULL,
 
@@ -99,48 +97,6 @@ CREATE TABLE `Message` (
 ) DEFAULT CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;
 
 -- CreateTable
-CREATE TABLE `Task` (
-    `task_id` INTEGER NOT NULL AUTO_INCREMENT,
-    `user_id` INTEGER NOT NULL,
-    `title` VARCHAR(191) NOT NULL,
-    `description` TEXT NULL,
-    `status` VARCHAR(191) NOT NULL DEFAULT 'pending',
-    `priority` VARCHAR(191) NOT NULL DEFAULT 'medium',
-    `due_date` DATETIME(3) NULL,
-    `completed_at` DATETIME(3) NULL,
-    `created_at` DATETIME(3) NOT NULL DEFAULT CURRENT_TIMESTAMP(3),
-    `updated_at` DATETIME(3) NOT NULL,
-    `category` VARCHAR(191) NULL,
-
-    INDEX `Task_user_id_status_idx`(`user_id`, `status`),
-    INDEX `Task_user_id_due_date_idx`(`user_id`, `due_date`),
-    PRIMARY KEY (`task_id`)
-) DEFAULT CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;
-
--- CreateTable
-CREATE TABLE `Subtask` (
-    `subtask_id` INTEGER NOT NULL AUTO_INCREMENT,
-    `task_id` INTEGER NOT NULL,
-    `title` VARCHAR(191) NOT NULL,
-    `is_completed` BOOLEAN NOT NULL DEFAULT false,
-    `completed_at` DATETIME(3) NULL,
-    `created_at` DATETIME(3) NOT NULL DEFAULT CURRENT_TIMESTAMP(3),
-    `order` INTEGER NOT NULL DEFAULT 0,
-
-    INDEX `Subtask_task_id_idx`(`task_id`),
-    PRIMARY KEY (`subtask_id`)
-) DEFAULT CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;
-
--- CreateTable
-CREATE TABLE `TaskTag` (
-    `task_id` INTEGER NOT NULL,
-    `tag_name` VARCHAR(191) NOT NULL,
-    `created_at` DATETIME(3) NOT NULL DEFAULT CURRENT_TIMESTAMP(3),
-
-    PRIMARY KEY (`task_id`, `tag_name`)
-) DEFAULT CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;
-
--- CreateTable
 CREATE TABLE `MessageStatus` (
     `message_id` INTEGER NOT NULL,
     `user_id` INTEGER NOT NULL,
@@ -196,20 +152,6 @@ CREATE TABLE `GroupAdmin` (
 ) DEFAULT CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;
 
 -- CreateTable
-CREATE TABLE `Notification` (
-    `notification_id` INTEGER NOT NULL AUTO_INCREMENT,
-    `user_id` INTEGER NOT NULL,
-    `message` VARCHAR(191) NOT NULL,
-    `notification_type` VARCHAR(191) NULL,
-    `action_url` VARCHAR(191) NULL,
-    `is_read` BOOLEAN NOT NULL DEFAULT false,
-    `read_at` DATETIME(3) NULL,
-    `created_at` DATETIME(3) NOT NULL DEFAULT CURRENT_TIMESTAMP(3),
-
-    PRIMARY KEY (`notification_id`)
-) DEFAULT CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;
-
--- CreateTable
 CREATE TABLE `PushSubscription` (
     `subscription_id` INTEGER NOT NULL AUTO_INCREMENT,
     `user_id` INTEGER NOT NULL,
@@ -244,21 +186,6 @@ CREATE TABLE `BlockedUser` (
     PRIMARY KEY (`user_id`, `blocked_user_id`)
 ) DEFAULT CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;
 
--- CreateTable
-CREATE TABLE `AISession` (
-    `session_id` VARCHAR(191) NOT NULL,
-    `user_id` INTEGER NOT NULL,
-    `title` VARCHAR(191) NULL,
-    `conversation` JSON NOT NULL,
-    `created_at` DATETIME(3) NOT NULL DEFAULT CURRENT_TIMESTAMP(3),
-    `last_activity` DATETIME(3) NOT NULL,
-    `expires_at` DATETIME(3) NOT NULL,
-
-    INDEX `AISession_user_id_created_at_idx`(`user_id`, `created_at`),
-    INDEX `AISession_expires_at_idx`(`expires_at`),
-    PRIMARY KEY (`session_id`)
-) DEFAULT CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;
-
 -- AddForeignKey
 ALTER TABLE `Auth` ADD CONSTRAINT `Auth_user_id_fkey` FOREIGN KEY (`user_id`) REFERENCES `User`(`user_id`) ON DELETE RESTRICT ON UPDATE CASCADE;
 
@@ -282,15 +209,6 @@ ALTER TABLE `Message` ADD CONSTRAINT `Message_sender_id_fkey` FOREIGN KEY (`send
 
 -- AddForeignKey
 ALTER TABLE `Message` ADD CONSTRAINT `Message_referenced_message_id_fkey` FOREIGN KEY (`referenced_message_id`) REFERENCES `Message`(`message_id`) ON DELETE SET NULL ON UPDATE CASCADE;
-
--- AddForeignKey
-ALTER TABLE `Task` ADD CONSTRAINT `Task_user_id_fkey` FOREIGN KEY (`user_id`) REFERENCES `User`(`user_id`) ON DELETE CASCADE ON UPDATE CASCADE;
-
--- AddForeignKey
-ALTER TABLE `Subtask` ADD CONSTRAINT `Subtask_task_id_fkey` FOREIGN KEY (`task_id`) REFERENCES `Task`(`task_id`) ON DELETE CASCADE ON UPDATE CASCADE;
-
--- AddForeignKey
-ALTER TABLE `TaskTag` ADD CONSTRAINT `TaskTag_task_id_fkey` FOREIGN KEY (`task_id`) REFERENCES `Task`(`task_id`) ON DELETE CASCADE ON UPDATE CASCADE;
 
 -- AddForeignKey
 ALTER TABLE `MessageStatus` ADD CONSTRAINT `MessageStatus_message_id_fkey` FOREIGN KEY (`message_id`) REFERENCES `Message`(`message_id`) ON DELETE RESTRICT ON UPDATE CASCADE;
@@ -320,9 +238,6 @@ ALTER TABLE `GroupAdmin` ADD CONSTRAINT `GroupAdmin_chat_id_fkey` FOREIGN KEY (`
 ALTER TABLE `GroupAdmin` ADD CONSTRAINT `GroupAdmin_user_id_fkey` FOREIGN KEY (`user_id`) REFERENCES `User`(`user_id`) ON DELETE RESTRICT ON UPDATE CASCADE;
 
 -- AddForeignKey
-ALTER TABLE `Notification` ADD CONSTRAINT `Notification_user_id_fkey` FOREIGN KEY (`user_id`) REFERENCES `User`(`user_id`) ON DELETE RESTRICT ON UPDATE CASCADE;
-
--- AddForeignKey
 ALTER TABLE `PushSubscription` ADD CONSTRAINT `PushSubscription_user_id_fkey` FOREIGN KEY (`user_id`) REFERENCES `User`(`user_id`) ON DELETE CASCADE ON UPDATE CASCADE;
 
 -- AddForeignKey
@@ -333,6 +248,3 @@ ALTER TABLE `BlockedUser` ADD CONSTRAINT `BlockedUser_user_id_fkey` FOREIGN KEY 
 
 -- AddForeignKey
 ALTER TABLE `BlockedUser` ADD CONSTRAINT `BlockedUser_blocked_user_id_fkey` FOREIGN KEY (`blocked_user_id`) REFERENCES `User`(`user_id`) ON DELETE RESTRICT ON UPDATE CASCADE;
-
--- AddForeignKey
-ALTER TABLE `AISession` ADD CONSTRAINT `AISession_user_id_fkey` FOREIGN KEY (`user_id`) REFERENCES `User`(`user_id`) ON DELETE CASCADE ON UPDATE CASCADE;
