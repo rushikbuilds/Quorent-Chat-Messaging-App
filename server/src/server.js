@@ -20,24 +20,22 @@ const cors = require('cors');
 
 const allowedOrigins = [
   "http://localhost:3000",
-  "http://127.0.0.1:3000",
   "https://localhost:3000",
-  "https://127.0.0.1:3000",
-  "http://localhost:3002",
-  "http://127.0.0.1:3002",
-  "https://localhost:3002",
-  "https://127.0.0.1:3002",
-  "https://rushik8626.github.io",
-  "https://quorent.vercel.app",
-  "https://switftalk.vercel.app",
-  "https://quorent-kv2qalfll-rushikeshs-projects-0260b878.vercel.app",
-  "https://quorent-api.me"
+  "http://localhost:3003",
+  "https://localhost:3003",
+  "https://quorent-api.me",
+  "https://quorent.xyz",
+  "https://api.quorent.xyz",
+  "https://ws.quorent.xyz",
+  "http://quorent.xyz",
+  "http://api.quorent.xyz",
+  "http://ws.quorent.xyz"
 ];
 
 const checkCorsOrigin = function (origin, callback) {
   if (!origin || allowedOrigins.includes(origin) ||
     (/^https?:\/\/(localhost|127\.0\.0\.1)(:\d+)?$/.test(origin)) ||
-    (origin && (origin.includes('.trycloudflare.com') || origin.includes('.github.io') || origin.includes('quorent-api.me') || origin.includes('vercel.app')))) {
+    (origin && (origin.includes('.trycloudflare.com') || origin.includes('.github.io') || origin.includes('quorent-api.me') || origin.includes('vercel.app') || origin.includes('quorent.xyz')))) {
     callback(null, true);
   } else {
     callback(new Error('Not allowed by CORS'));
