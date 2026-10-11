@@ -155,7 +155,7 @@ export default function LandingPage() {
                             </span>
                             <span className="lp-logo-text">Quorent</span>
                         </div>
-                        <p className="lp-footer-copy">© {new Date().getFullYear()} SwiftTak. All rights reserved.</p>
+                        <p className="lp-footer-copy">© {new Date().getFullYear()} Quorent. All rights reserved.</p>
                     </div>
                 </footer>
             </div>
